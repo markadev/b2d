@@ -2061,16 +2061,23 @@ int savelofragment() {
     for (y = 0; y < 48; y++) {
       if (appletop == 1 && y > 39)
         break;
+      y2 = y;
       /* first 40 bytes goes to auxiliary memory (even pixels) */
       for (x = 0; x < 40; x++) {
-        remap = dhrgetpixel(x, y);
+        x2 = (x * 2);
+        remap = dhrgetpixel(x2, y2);
         temp = dloauxcolor[remap];
         setlopixel(temp, x, y, 1);
       }
       /* followed by the interleaf (odd pixels)
          next 40 bytes goes to main memory */
       for (x = 0; x < 40; x++) {
-        temp = dhrgetpixel(x, y);
+        if(lores == 1) {
+          x2 = x;
+        } else {
+          x2 = (x * 2) + 1;
+        }
+        temp = dhrgetpixel(x2, y2);
         setlopixel(temp, x + 40, y, 1);
       }
     }
@@ -2129,8 +2136,10 @@ int savelofragment() {
 
       memset(hgrbuf, 0, LOBINSIZE);
       for (y = 0; y < 48; y++) {
+        y2 = y;
         for (x = 0; x < 40; x++) {
-          remap = dhrgetpixel(x, y);
+          x2 = (x * 2);
+          remap = dhrgetpixel(x2, y2);
           temp = dloauxcolor[remap];
           setlopixel(temp, x, y, 0);
         }
@@ -2157,8 +2166,14 @@ int savelofragment() {
     WriteDosHeader(fp, fl, 1024);
     memset(hgrbuf, 0, LOBINSIZE);
     for (y = 0; y < 48; y++) {
+      y2 = y;
       for (x = 0; x < 40; x++) {
-        temp = dhrgetpixel(x, y);
+        if(lores == 1) {
+          x2 = x;
+        } else {
+          x2 = (x * 2) + 1;
+        }
+        temp = dhrgetpixel(x2, y2);
         setlopixel(temp, x, y, 0);
       }
     }
